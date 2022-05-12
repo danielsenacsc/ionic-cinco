@@ -6,7 +6,7 @@
 <ion-content padding-left padding-top>
     <ion-list #slidingList>
         <ion-item-sliding *ngFor="let ordemDeServico of ordensDeServico">
-            <ion-item>
+            <ion-item href="/menu/(menucontent:os-add-edit/{{ordemDeServico.ordemdeservicoid}})">
                 <ion-label>
                     <h2>{{ordemDeServico.veiculo}}</h2>
                     <p style="text-align:right">Entrada:
@@ -14,7 +14,7 @@
                 </ion-label>
             </ion-item>
             <ion-item-options side="end">
-                <ion-item-option color="danger">
+                <ion-item-option color="danger" (click)="removerAtendimento(ordemDeServico)">
                     <ion-button color="danger" no-padding>
                         <ion-icon name="trash"></ion-icon>
                         Remover
@@ -24,7 +24,7 @@
         </ion-item-sliding>
     </ion-list>
     <ion-fab vertical="top" horizontal="end" slot="fixed" edge="true">
-        <ion-fab-button>
+        <ion-fab-button href='/menu/(menucontent:os-add-edit/-1)'>
             <ion-icon name="add"></ion-icon>
         </ion-fab-button>
     </ion-fab>

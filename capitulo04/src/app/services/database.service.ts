@@ -20,11 +20,13 @@ export class DatabaseService {
 
     private async createTables(db: SQLiteObject): Promise<boolean> {
         try {
-            await db.sqlBatch([
-                ['CREATE TABLE IF NOT EXISTS ordensdeservico (ordemdeservicoid TEXT primary key NOT NULL, ' +
-                    'clienteid TEXT NOT NULL, veiculo TEXT NOT NULL, dataehoraentrada DATETIME NOT NULL, ' +
-                    'dataehoratermino DATETIME, dataehoraentrega DATETIME)']
-            ])
+            await db.sqlBatch([['CREATE TABLE IF NOT EXISTS clientes (clienteid TEXT primary key NOT NULL, ' +
+                'nome TEXT NOT NULL, email TEXT NOT NULL, telefone TEXT NOT NULL, renda REAL NOT NULL, ' +
+                'nascimento DATE NOT NULL)'],
+            ['CREATE TABLE IF NOT EXISTS ordensdeservico (ordemdeservicoid TEXT primary key NOT NULL, ' +
+                'clienteid TEXT NOT NULL, veiculo TEXT NOT NULL, dataehoraentrada DATETIME NOT NULL, ' +
+                'dataehoratermino DATETIME, dataehoraentrega DATETIME, ' +
+                'FOREIGN KEY (clienteid) REFERENCES clientes (clienteid) ON DELETE CASCADE ON UPDATE NO ACTION)']])
                 .then(() => {
                     console.log('Criação de tabelas realizada com sucesso');
                     return true;
@@ -36,15 +38,21 @@ export class DatabaseService {
     }
 
     private async populateDatabase(db: SQLiteObject): Promise<boolean> {
+        const clienteID = Guid.create().toString();
+
         try {
             await db.executeSql('select COUNT(ordemdeservicoid) as qtdeOS from ordensdeservico', [])
                 .then(async (data) => {
                     if (data.rows.item(0).qtdeOS === 0) {
                         try {
-                            const clienteID = Guid.create().toString();
                             const ordemDeServicoID = Guid.create().toString();
 
                             await db.sqlBatch([
+                                ['insert into clientes ' +
+                                    '(clienteid, nome, email, telefone, renda, nascimento) values ' +
+                                    '(?, "Asbrusio", "asbrusio@cc.com", "999", 123.45, CURRENT_DATE)',
+                                [clienteID]
+                                ],
                                 ['insert into ordensdeservico ' +
                                     '(ordemdeservicoid, clienteid, veiculo, dataehoraentrada) values(?, ?, ?, CURRENT_TIMESTAMP)',
                                 [ordemDeServicoID, clienteID, 'ABC-1235']]
