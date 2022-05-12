@@ -2,19 +2,9 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  {
-    path: 'home',
-    loadChildren: () => import('./pages/tipo-servicos/listagem/tipo-servicos-listagem.module').then(m => m.TipoServicosListagemPageModule)
-  },
-  {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
-  },
-  {
-    path: 'add-edit/:id',
-    loadChildren: () => import('./pages/tipo-servicos/add-edit/tipo-servicos-add-edit.module').then(m => m.TipoServicosAddEditPageModule)
-  }
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', loadChildren: () => import('./pages/ordensdeservico/listagem/ordensdeservico-listagem.module').then(m => m.OrdensDeServicoListagemPageModule) },
+  { path: 'add-edit/:id', loadChildren: () => import('./pages/pecas/add-edit/pecas-add-edit.module').then(m => m.PecasAddEditPageModule) }
 ];
 
 @NgModule({
